@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="?android:attr/listPreferredItemHeight"
+	android:padding="6dip" android:orientation="vertical">
+
+	<TextView android:id="@+id/station_title"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:textStyle="bold" android:textColor="#fbb030"></TextView>
+
+	<TextView android:id="@+id/station_description"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" android:orientation="horizontal"
+		android:layout_height="wrap_content">
+
+		<TextView android:id="@+id/bikes_available"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/row_available_bikes"></TextView>
+
+		<TextView android:id="@+id/bikes_available_num"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textStyle="bold" android:textColor="#ffffff"></TextView>
+
+		<TextView android:id="@+id/boxes_available"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:text="@string/row_available_boxes"></TextView>
+
+		<TextView android:id="@+id/boxes_available_num"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textStyle="bold" android:textColor="#ffffff"></TextView>
+
+	</LinearLayout>
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="fill_parent" android:orientation="horizontal"
+		android:layout_height="wrap_content">
+
+		<TextView android:id="@+id/distance" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/row_distance"></TextView>
+
+		<TextView android:id="@+id/distance_num"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:textStyle="bold" android:textColor="#ffffff"></TextView>
+
+		<TextView android:id="@+id/distance_km" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/row_km"></TextView>
+
+		<TextView android:id="@+id/active" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/row_active_warning"
+			android:textStyle="bold" android:textColor="#ff3333"></TextView>
+	</LinearLayout>
+</LinearLayout>

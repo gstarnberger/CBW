@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Citybike Stationen Wien</string>
+	<string name="main_no_items">Keine Daten verfügbar. Bitte \"Menu / Aktualisieren\" zum Aktualisieren auswählen.</string>
+	<string name="resync">Aktualisieren</string>
+	<string name="about_label">Info</string>
+	<string name="about_title">Citybike Stationen Wien</string>
+	<string name="progress_title">Bitte warten...</string>
+	<string name="progress_body">Standortliste und Position werden abgefragt...</string>
+	<string name="error_no_gps">Bitte GPS oder \"Use wireless networks\" in den Location Einstellungen aktivieren</string>
+	<string name="exception_parser">Parser Fehler</string>
+	<string name="exception_content">Content Fehler</string>
+	<string name="exception_hostnotfound">Fehler: Host nicht gefunden</string>
+	<string name="exception_protocol">Protokol Fehler</string>
+	<string name="exception_io">IO Fehler</string>
+	<string name="row_distance">Entfernung:&#160;</string>
+	<string name="row_active_warning">&#160;&#160;&#160;&#160;Nicht aktiv!</string>
+	<string name="row_available_bikes">Verfügbare Räder:&#160;</string>
+	<string name="row_available_boxes">&#160;&#160;Verfügbare Boxen:&#160;</string>
+</resources>

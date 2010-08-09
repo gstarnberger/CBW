@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="json_url">http://dynamisch.citybikewien.at/citybike_xml.php</string>
+	<string name="map_uri">geo:0,0?q=$lat,$long&amp;z=20</string>
+	<string name="app_name">Citybike Stations Vienna</string>
+	<string name="main_no_items">No data available. Use Menu / Reload to retry fetching data.</string>
+	<string name="resync">Reload</string>
+	<string name="about_label">About</string>
+	<string name="about_title">Citybike Stations Vienna</string>
+	<string name="about_text">(c) 2010 Günther Starnberger &lt;guenther@starnberger.name&gt;</string>
+	<string name="mapmode_label">Map</string>
+	<string name="max_age">60000</string>
+	<string name="max_timeout">15000</string>
+	<string name="progress_title">Please wait...</string>
+	<string name="progress_body">Retrieving data and obtaining current location...</string>
+	<string name="error_no_gps">Please activate GPS or \"Use wireless networks\" in location settings</string>
+	<string name="exception_parser">Parser error</string>
+	<string name="exception_content">Content error</string>
+	<string name="exception_hostnotfound">Host not found error</string>
+	<string name="exception_protocol">Protocol error</string>
+	<string name="exception_io">IO error</string>
+	<string name="row_distance">Distance:&#160;</string>
+	<string name="row_km">&#160;km&#160;</string>
+	<string name="row_active_warning">&#160;&#160;&#160;&#160;Not active!</string>
+	<string name="row_available_bikes">Available bikes:&#160;</string>
+	<string name="row_available_boxes">&#160;&#160;Available boxes:&#160;</string>
+</resources>
