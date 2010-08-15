@@ -50,7 +50,7 @@ public class ListStations extends ListActivity {
 	public enum SortOrder {BY_DISTANCE, ALPHABETICALLY};
 	private SortOrder sortOrder = SortOrder.BY_DISTANCE;
 	private SharedPreferences mPrefs;
-	private final int minUpdateInterval = 5 * 60 * 1000; // 5 minutes
+	private final int minUpdateInterval = 10 * 60 * 1000; // 5 minutes
 	private long lastUpdate = Long.MAX_VALUE;
 	
 	@Override
