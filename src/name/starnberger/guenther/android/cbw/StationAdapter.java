@@ -5,7 +5,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import name.starnberger.guenther.android.cbw.R;
-import name.starnberger.guenther.android.cbw.ListStations.SortOrder;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -20,7 +19,6 @@ import android.widget.TextView;
 class StationAdapter extends ArrayAdapter<Station> {
 	private ListStations listStations;
 	private ArrayList<Station> items;
-	private SortOrder sortOrder;
 	
 	public StationAdapter(ListStations listStations, int textViewResourceId,
 			ArrayList<Station> items) {
@@ -36,8 +34,6 @@ class StationAdapter extends ArrayAdapter<Station> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		this.sortOrder = listStations.getSortOrder();
-
 		View v = convertView;
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) listStations
@@ -92,35 +88,30 @@ class StationAdapter extends ArrayAdapter<Station> {
 			TextView distance = (TextView) v.findViewById(R.id.distance);
 			TextView distance_num = (TextView) v.findViewById(R.id.distance_num);
 			TextView distance_km = (TextView) v.findViewById(R.id.distance_km);
-			if (distance_num != null) {
-				Location loc = listStations.getLocationHelper().getCachedLocation();
-				
-				float dist = 0;
-				if(loc != null) {
-					dist = loc.distanceTo(o.getLocation()) / 1000;
-				}
 			
-				switch(sortOrder) {
-					case BY_DISTANCE:
-						distance.setVisibility(View.VISIBLE);
-						distance_num.setVisibility(View.VISIBLE);
-						
-						if ((loc != null) && (dist < 100)) {
-							distance_num.setText(roundLoc(dist));
-							distance_km.setVisibility(View.VISIBLE);
-						} else {
-							distance_num.setText("?");
-							distance_km.setVisibility(View.INVISIBLE);
-						}
-						
-						break;
-					case ALPHABETICALLY:
-						distance.setVisibility(View.INVISIBLE);
-						distance_num.setVisibility(View.INVISIBLE);
+			Location loc = listStations.getLocationHelper().getCachedLocation();
+			
+			float dist = 0;
+			if(loc != null) {
+				dist = loc.distanceTo(o.getLocation()) / 1000;
+			}
+			
+			if (distance_num != null) {			
+				if(loc == null) {
+					distance.setVisibility(View.INVISIBLE);
+					distance_num.setVisibility(View.INVISIBLE);
+					distance_km.setVisibility(View.INVISIBLE);
+				} else {
+					distance.setVisibility(View.VISIBLE);
+					distance_num.setVisibility(View.VISIBLE);
+					
+					if (dist < 100) {
+						distance_num.setText(roundLoc(dist));
+						distance_km.setVisibility(View.VISIBLE);
+					} else {
+						distance_num.setText("?");
 						distance_km.setVisibility(View.INVISIBLE);
-						break;
-					default:
-						// FIXME: This shouldn't happen
+					}
 				}
 			}
 
@@ -135,7 +126,7 @@ class StationAdapter extends ArrayAdapter<Station> {
 				}			
 			}
 			
-			if(active_val && (sortOrder == SortOrder.ALPHABETICALLY)) {
+			if(active_val && (loc == null)) {
 				distance_and_active_row.setVisibility(View.GONE);
 			} else {
 				distance_and_active_row.setVisibility(View.VISIBLE);
