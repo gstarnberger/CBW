@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -24,6 +25,7 @@ import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -37,6 +39,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class ListStations extends ListActivity {
+	public static final String PREFS_NAME = "CBWPrefs";
 	private ProgressDialog m_ProgressDialog = null;
 	private ArrayList<Station> m_stations = null;
 	private StationAdapter m_adapter;
@@ -44,7 +47,12 @@ public class ListStations extends ListActivity {
 	private Location curLocation;
 	private LocationHelper locationHelper;
 	private boolean splash = true;
-
+	public enum SortOrder {BY_DISTANCE, ALPHABETICALLY};
+	private SortOrder sortOrder = SortOrder.BY_DISTANCE;
+	private SharedPreferences mPrefs;
+	private final int minUpdateInterval = 5 * 60 * 1000; // 5 minutes
+	private long lastUpdate = Long.MAX_VALUE;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,6 +69,16 @@ public class ListStations extends ListActivity {
 		
 		setContentView(R.layout.main);
 
+		mPrefs = getSharedPreferences(PREFS_NAME, 0);
+		
+		String sortOrderString = mPrefs.getString("sort_order", "BY_DISTANCE");
+		
+		if(sortOrderString.equals("ALPHABETICALLY")) {
+			sortOrder = SortOrder.ALPHABETICALLY;
+		} else {
+			sortOrder = SortOrder.BY_DISTANCE;
+		}
+		
 		locationHelper = new LocationHelper(
 				(LocationManager) getSystemService(LOCATION_SERVICE), Integer
 						.parseInt(getString(R.string.max_age)), Integer
@@ -71,6 +89,15 @@ public class ListStations extends ListActivity {
 		setListAdapter(this.m_adapter);
 		
 		updateStations();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		if(System.currentTimeMillis() - lastUpdate > minUpdateInterval) {
+			updateStations();
+		}
 	}
 
 	public Location getCurLocation() {
@@ -88,6 +115,24 @@ public class ListStations extends ListActivity {
 		inflater.inflate(R.menu.menu, menu);
 		return true;
 	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		switch(sortOrder) {
+		case BY_DISTANCE:
+			menu.findItem(R.id.sort_alphabetically).setVisible(true).setEnabled(true);
+			menu.findItem(R.id.sort_by_distance).setVisible(false).setEnabled(false);
+			break;
+		case ALPHABETICALLY:
+			menu.findItem(R.id.sort_by_distance).setVisible(true).setEnabled(true);
+			menu.findItem(R.id.sort_alphabetically).setVisible(false).setEnabled(false);
+			break;
+		default:
+			// FIXME: This should not happen
+		}
+		
+		return true;
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -98,6 +143,18 @@ public class ListStations extends ListActivity {
 		case R.id.about:
 			Intent i = new Intent(this, About.class);
 			startActivity(i);
+			return true;
+		case R.id.sort_by_distance:
+			if(curLocation == null) {
+				UIshowErr(getString(R.string.cant_switch_distance));
+				return true;
+			}
+			sortOrder = SortOrder.BY_DISTANCE;
+			runOnUiThread(updateUI);
+			return true;
+		case R.id.sort_alphabetically:
+			sortOrder = SortOrder.ALPHABETICALLY;
+			runOnUiThread(updateUI);
 			return true;
 		}
 		return false;
@@ -119,13 +176,21 @@ public class ListStations extends ListActivity {
 				Location loc = getLocation();
 
 				try {
-					if (loc == null) {
-						deleteEntries();
-						UIshowErr(getString(R.string.error_no_gps));
-					}
 					viewStationsThread.join();
+					
+					lastUpdate = System.currentTimeMillis();
+					
+					if (loc == null) {
+						SortOrder previousSortOrder = sortOrder;
+						sortOrder = SortOrder.ALPHABETICALLY;
+						runOnUiThread(updateUI);
+						
+						if(previousSortOrder == SortOrder.BY_DISTANCE) {
+							UIshowErr(getString(R.string.error_no_gps));
+						}
+					}
 					if (loc != null) {
-						runOnUiThread(returnRes);
+						runOnUiThread(updateUI);
 					}
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
@@ -239,13 +304,25 @@ public class ListStations extends ListActivity {
 		toast.show();
 	}
 
-	private Runnable returnRes = new Runnable() {
+	private Runnable updateUI = new Runnable() {
 		@Override
 		public void run() {
 			if (m_stations != null && m_stations.size() > 0) {
 
-				Collections.sort(m_stations,
-						new LocationComparator(curLocation));
+				Comparator<Station> stationComparator = null;
+				
+				switch(sortOrder) {
+				case BY_DISTANCE:
+					stationComparator = new StationDistanceComparator(curLocation);
+					break;
+				case ALPHABETICALLY:
+					stationComparator = new StationAlphabeticalComparator();
+					break;
+				default:
+					UIshowErr("Warning: sortOrder is null");
+				}
+				
+				Collections.sort(m_stations, stationComparator);
 
 				m_adapter.clear();
 				for (int i = 0; i < m_stations.size(); i++)
@@ -292,6 +369,11 @@ public class ListStations extends ListActivity {
 			m_ProgressDialog.dismiss();
 			hideSplash();
 		}
+		
+		SharedPreferences.Editor ed = mPrefs.edit();
+		ed.putString("sort_order", sortOrder.toString());
+		
+		ed.commit();
 	}
 
 	private void hideSplash() {
@@ -303,6 +385,10 @@ public class ListStations extends ListActivity {
 		}
 	}
 
+	public SortOrder getSortOrder() {
+		return sortOrder;
+	}
+	
 //	private void setFullScreen(boolean full) {
 //		if (full) {
 //			WindowManager.LayoutParams attrs = this.getWindow().getAttributes();

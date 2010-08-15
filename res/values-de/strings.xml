@@ -7,7 +7,7 @@
 	<string name="about_title">Citybike Stationen Wien</string>
 	<string name="progress_title">Bitte warten...</string>
 	<string name="progress_body">Standortliste und Position werden abgefragt...</string>
-	<string name="error_no_gps">Bitte GPS oder \"Use wireless networks\" in den Location Einstellungen aktivieren</string>
+	<string name="error_no_gps">Standortinformationen nicht verfügbar - Sortierung wurde auf \"alphabetisch\" geändert.\n\nBitte GPS oder \"Use wireless networks\" in den Location Einstellungen aktivieren.</string>
 	<string name="exception_parser">Parser Fehler</string>
 	<string name="exception_content">Content Fehler</string>
 	<string name="exception_hostnotfound">Fehler: Host nicht gefunden</string>
@@ -17,4 +17,7 @@
 	<string name="row_active_warning">&#160;&#160;&#160;&#160;Nicht aktiv!</string>
 	<string name="row_available_bikes">Verfügbare Räder:&#160;</string>
 	<string name="row_available_boxes">&#160;&#160;Verfügbare Boxen:&#160;</string>
+	<string name="sort_by_distance">Nach Entfernung sort.</string>
+	<string name="sort_alphabetically">Nach Name sort.</string>
+	<string name="cant_switch_distance">Nach Entfernung sortieren nicht möglich, da aktueller Standort unbekannt ist.</string>
 </resources>

@@ -4,10 +4,10 @@ import java.util.Comparator;
 
 import android.location.Location;
 
-public class LocationComparator implements Comparator<Station> {
+public class StationDistanceComparator implements Comparator<Station> {
 	private Location curLocation;
 	
-	public LocationComparator(Location curLocation) {
+	public StationDistanceComparator(Location curLocation) {
 		this.curLocation = curLocation;
 	}
 	

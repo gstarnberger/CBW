@@ -4,6 +4,10 @@
 		android:icon="@android:drawable/ic_menu_rotate" />
 <!-- 	<item android:id="@+id/about" android:title="@string/mapmode_label"
 		android:icon="@android:drawable/ic_menu_mapmode" /> -->
+	<item android:id="@+id/sort_by_distance" android:title="@string/sort_by_distance"
+		android:icon="@android:drawable/ic_menu_sort_by_size" />
+	<item android:id="@+id/sort_alphabetically" android:title="@string/sort_alphabetically"
+		android:icon="@android:drawable/ic_menu_sort_alphabetically" />
 	<item android:id="@+id/about" android:title="@string/about_label"
 		android:icon="@android:drawable/ic_menu_info_details" />
 </menu>

@@ -5,19 +5,23 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import name.starnberger.guenther.android.cbw.R;
+import name.starnberger.guenther.android.cbw.ListStations.SortOrder;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 class StationAdapter extends ArrayAdapter<Station> {
 	private ListStations listStations;
 	private ArrayList<Station> items;
-
+	private SortOrder sortOrder;
+	
 	public StationAdapter(ListStations listStations, int textViewResourceId,
 			ArrayList<Station> items) {
 		super(listStations, textViewResourceId, items);
@@ -32,6 +36,8 @@ class StationAdapter extends ArrayAdapter<Station> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		this.sortOrder = listStations.getSortOrder();
+
 		View v = convertView;
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) listStations
@@ -82,31 +88,59 @@ class StationAdapter extends ArrayAdapter<Station> {
 				}
 			}
 
-			TextView distance = (TextView) v.findViewById(R.id.distance_num);
+			LinearLayout distance_and_active_row = (LinearLayout) v.findViewById(R.id.distance_and_active_row);
+			TextView distance = (TextView) v.findViewById(R.id.distance);
+			TextView distance_num = (TextView) v.findViewById(R.id.distance_num);
 			TextView distance_km = (TextView) v.findViewById(R.id.distance_km);
-			if (distance != null) {
-				float dist = listStations.getLocationHelper()
-						.getCachedLocation().distanceTo(o.getLocation()) / 1000;
-
-				if (dist < 100) {
-					distance.setText(roundLoc(dist));
-					distance_km.setVisibility(View.VISIBLE);
-				} else {
-					distance.setText("?");
-					distance_km.setVisibility(View.INVISIBLE);
+			if (distance_num != null) {
+				Location loc = listStations.getLocationHelper().getCachedLocation();
+				
+				float dist = 0;
+				if(loc != null) {
+					dist = loc.distanceTo(o.getLocation()) / 1000;
+				}
+			
+				switch(sortOrder) {
+					case BY_DISTANCE:
+						distance.setVisibility(View.VISIBLE);
+						distance_num.setVisibility(View.VISIBLE);
+						
+						if ((loc != null) && (dist < 100)) {
+							distance_num.setText(roundLoc(dist));
+							distance_km.setVisibility(View.VISIBLE);
+						} else {
+							distance_num.setText("?");
+							distance_km.setVisibility(View.INVISIBLE);
+						}
+						
+						break;
+					case ALPHABETICALLY:
+						distance.setVisibility(View.INVISIBLE);
+						distance_num.setVisibility(View.INVISIBLE);
+						distance_km.setVisibility(View.INVISIBLE);
+						break;
+					default:
+						// FIXME: This shouldn't happen
 				}
 			}
 
 			TextView active_view = (TextView) v
 					.findViewById(R.id.active);
+			boolean active_val = o.isActive();
 			if (active_view != null) {
-				boolean active_val = o.isActive();
 				if(active_val) {
 					active_view.setVisibility(View.INVISIBLE);
 				} else {
 					active_view.setVisibility(View.VISIBLE);
 				}			
 			}
+			
+			if(active_val && (sortOrder == SortOrder.ALPHABETICALLY)) {
+				distance_and_active_row.setVisibility(View.GONE);
+			} else {
+				distance_and_active_row.setVisibility(View.VISIBLE);
+			}
+
 		}
 		return v;
 	}

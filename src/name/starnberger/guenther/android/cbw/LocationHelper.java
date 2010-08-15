@@ -66,7 +66,9 @@ public class LocationHelper implements LocationListener {
 	public Location getCachedLocation() {
 		// FIXME: Should we call updateProvider here?
 		
-		if (cachedLocation == null) {
+		if(this.provider == null) {
+			return null;
+		} else if (cachedLocation == null) {
 			cachedLocation = mgr.getLastKnownLocation(provider);
 		}
 		return cachedLocation;
