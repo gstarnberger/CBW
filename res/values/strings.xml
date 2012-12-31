@@ -7,7 +7,7 @@
 	<string name="resync">Reload</string>
 	<string name="about_label">About</string>
 	<string name="about_title">Citybike Stations Vienna</string>
-	<string name="about_text">(c) 2010 Günther Starnberger &lt;guenther@starnberger.name&gt;</string>
+	<string name="about_text">Günther Starnberger &lt;guenther@starnberger.name&gt;</string>
 	<string name="mapmode_label">Map</string>
 	<string name="max_age">60000</string>
 	<string name="max_timeout">15000</string>
