@@ -88,21 +88,12 @@ public class Station {
 		station.setBikesAvailable(bikesAvailable);
 		station.setBoxesAvailable(boxesAvailable);
 		station.setLocation(location);
-		station.setActive(this.isActive());
-
-		Location location = new Location(LOCATION_PROVIDER);
-
-		try {
-			location.setLatitude(Double.parseDouble(latitude));
-			location.setLongitude(Double.parseDouble(longitude));
-		} catch (NumberFormatException e) {
-		}
-		
-		station.setLocation(location);
-
+		station.setLatitude(latitude);
+		station.setLongitude(longitude);
+		station.setActive(active);
 		return station;
 	}
-	
+
 	public void clear() {
 		this.setStationName(null);
 		this.setStationDescription(null);
@@ -110,5 +101,19 @@ public class Station {
 		this.setBoxesAvailable(null);
 		this.setLocation(null);
 		this.setActive(false);
+		this.setLatitude(null);
+		this.setLongitude(null);
+	}
+
+	public void updateLocation() {
+		Location location = new Location(LOCATION_PROVIDER);
+
+		try {
+			location.setLatitude(Double.parseDouble(latitude));
+			location.setLongitude(Double.parseDouble(longitude));
+		} catch (NumberFormatException e) {
+		}
+
+		this.location = location;
 	}
 }

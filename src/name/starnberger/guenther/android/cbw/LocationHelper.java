@@ -5,7 +5,6 @@ package name.starnberger.guenther.android.cbw;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -65,17 +64,6 @@ public class LocationHelper implements LocationListener {
 		}
 	}
 
-	public Location getCachedLocation() {
-		// FIXME: Should we call updateProvider here?
-		
-		if(this.provider == null) {
-			return null;
-		} else if (cachedLocation == null) {
-			cachedLocation = mgr.getLastKnownLocation(provider);
-		}
-		return cachedLocation;
-	}
-
 	@Override
 	public void onLocationChanged(Location location) {
 		callBackLocation = location;
@@ -104,13 +92,21 @@ public class LocationHelper implements LocationListener {
 
 	// Must be called by containing class
 	public void onPause() {
-		mgr.removeUpdates(this);
 		if (waitReq != null) {
 			waitReq.release();
 		}
 	}
 	
 	private void updateProvider() {
-		this.provider = mgr.getBestProvider(new Criteria(), true);
+		String[] providerPriority = {LocationManager.NETWORK_PROVIDER, LocationManager.GPS_PROVIDER, LocationManager.PASSIVE_PROVIDER};
+
+		for (String provider : providerPriority) {
+			if (mgr.isProviderEnabled(provider)) {
+				this.provider = provider;
+				return;
+			}
+		}
+
+		this.provider = null;
 	}
 }

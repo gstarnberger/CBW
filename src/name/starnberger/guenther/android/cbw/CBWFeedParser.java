@@ -17,7 +17,9 @@ public class CBWFeedParser {
 		Element station = root.getChild("station");
 		station.setEndElementListener(new EndElementListener() {
 			public void end() {
-				stations.add((Station) currentStation.copy());
+				Station copiedStation = currentStation.copy();
+				copiedStation.updateLocation();
+				stations.add(copiedStation);
 				currentStation.clear();
 			}
 		});

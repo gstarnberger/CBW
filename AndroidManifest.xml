@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="name.starnberger.guenther.android.cbw" android:versionCode="19"
-	android:versionName="1.2.2" android:installLocation="auto">
+	package="name.starnberger.guenther.android.cbw" android:versionCode="20"
+	android:versionName="1.2.3" android:installLocation="auto">
 	<uses-sdk android:minSdkVersion="3" android:targetSdkVersion="8" />
 
 	<uses-permission android:name="android.permission.INTERNET" />

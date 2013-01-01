@@ -19,6 +19,7 @@ import android.widget.TextView;
 class StationAdapter extends ArrayAdapter<Station> {
 	private ListStations listStations;
 	private ArrayList<Station> items;
+	private Location curLocation = null;
 	
 	public StationAdapter(ListStations listStations, int textViewResourceId,
 			ArrayList<Station> items) {
@@ -89,15 +90,13 @@ class StationAdapter extends ArrayAdapter<Station> {
 			TextView distance_num = (TextView) v.findViewById(R.id.distance_num);
 			TextView distance_km = (TextView) v.findViewById(R.id.distance_km);
 			
-			Location loc = listStations.getLocationHelper().getCachedLocation();
-			
 			float dist = 0;
-			if(loc != null) {
-				dist = loc.distanceTo(o.getLocation()) / 1000;
+			if(curLocation != null) {
+				dist = curLocation.distanceTo(o.getLocation()) / 1000;
 			}
 			
 			if (distance_num != null) {			
-				if(loc == null) {
+				if(curLocation == null) {
 					distance.setVisibility(View.INVISIBLE);
 					distance_num.setVisibility(View.INVISIBLE);
 					distance_km.setVisibility(View.INVISIBLE);
@@ -126,7 +125,7 @@ class StationAdapter extends ArrayAdapter<Station> {
 				}			
 			}
 			
-			if(active_val && (loc == null)) {
+			if(active_val && (curLocation == null)) {
 				distance_and_active_row.setVisibility(View.GONE);
 			} else {
 				distance_and_active_row.setVisibility(View.VISIBLE);
@@ -134,5 +133,9 @@ class StationAdapter extends ArrayAdapter<Station> {
 
 		}
 		return v;
+	}
+
+	public void setCurLocation(Location curLocation) {
+		this.curLocation = curLocation;
 	}
 }

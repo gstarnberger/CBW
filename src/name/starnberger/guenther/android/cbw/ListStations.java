@@ -183,14 +183,14 @@ public class ListStations extends ListActivity {
 		Thread getLocationThread = new Thread(null, new Runnable() {
 			@Override
 			public void run() {
-				Location loc = getLocation();
+				updateCurLocation();
 
 				try {
 					viewStationsThread.join();
 					
 					lastUpdate = System.currentTimeMillis();
 					
-					if (loc == null) {
+					if (curLocation == null) {
 						SortOrder previousSortOrder = sortOrder;
 						sortOrder = SortOrder.ALPHABETICALLY;
 						runOnUiThread(updateUI);
@@ -198,8 +198,7 @@ public class ListStations extends ListActivity {
 						if(previousSortOrder == SortOrder.BY_DISTANCE) {
 							UIshowErr(getString(R.string.error_no_gps));
 						}
-					}
-					if (loc != null) {
+					} else {
 						runOnUiThread(updateUI);
 					}
 				} catch (InterruptedException e) {
@@ -214,27 +213,6 @@ public class ListStations extends ListActivity {
 				getString(R.string.progress_title),
 				getString(R.string.progress_body), true);
 	}
-
-	// The station updater is a test class required to display the splash screen
-	// private class StationUpdater extends AsyncTask<String, Void, Object> {
-	// protected Void doInBackground(String... args) {
-	//
-	// // This is where you would do all the work of downloading your data
-	//
-	// updateStations();
-	//
-	// return "replace this with your data object";
-	// }
-	//
-	// protected void onPostExecute(Object result) {
-	// // Pass the result data back to the main activity
-	// ListStations.this.data = result;
-	//
-	// if (MyActivity.this.pd != null) {
-	// MyActivity.this.pd.dismiss();
-	// }
-	// }
-	// }
 
 	private void getStations() {
 		HttpClient httpclient;
@@ -282,9 +260,8 @@ public class ListStations extends ListActivity {
 		}
 	}
 
-	private Location getLocation() {
+	private void updateCurLocation() {
 		this.curLocation = locationHelper.getLocation();
-		return curLocation;
 	}
 
 	private void UIshowErr(final String errMsg) {
@@ -336,8 +313,10 @@ public class ListStations extends ListActivity {
 				Collections.sort(m_stations, stationComparator);
 
 				m_adapter.clear();
-				for (int i = 0; i < m_stations.size(); i++)
-					m_adapter.add(m_stations.get(i));
+				m_adapter.setCurLocation(curLocation);
+				for (Station station : m_stations) {
+					m_adapter.add(station);
+				}
 			}
 			m_ProgressDialog.dismiss();
 			hideSplash();
