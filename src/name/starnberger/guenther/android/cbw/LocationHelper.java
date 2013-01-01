@@ -53,6 +53,8 @@ public class LocationHelper implements LocationListener {
 		} catch (InterruptedException e) {
 			Thread.currentThread().interrupt();
 			return lastLocation;
+		} finally {
+			mgr.removeUpdates(this);
 		}
 
 		if (callBackLocation != null) {
@@ -84,7 +86,6 @@ public class LocationHelper implements LocationListener {
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		mgr.removeUpdates(this);
 		if (waitReq != null) {
 			waitReq.release();
 		}
@@ -96,7 +97,6 @@ public class LocationHelper implements LocationListener {
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		mgr.removeUpdates(this);
 		if (waitReq != null) {
 			waitReq.release();
 		}
