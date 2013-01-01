@@ -26,6 +26,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -52,6 +54,7 @@ public class ListStations extends ListActivity {
 	private SharedPreferences mPrefs;
 	private final int minUpdateInterval = 10 * 60 * 1000; // 5 minutes
 	private long lastUpdate = Long.MAX_VALUE;
+	private String versionName = "unknown";
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,13 @@ public class ListStations extends ListActivity {
 		// setFullScreen(true);
 		
 		setContentView(R.layout.main);
+
+		try {
+			PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			versionName = pInfo.versionName;
+		} catch (NameNotFoundException e) {
+			// ignore
+		}
 
 		mPrefs = getSharedPreferences(PREFS_NAME, 0);
 		
@@ -241,6 +251,7 @@ public class ListStations extends ListActivity {
 			httpclient = new DefaultHttpClient(httpParams);
 
 			httpget = new HttpGet(getString(R.string.json_url));
+			httpget.setHeader("User-Agent", getUserAgent());
 			response = httpclient.execute(httpget);
 			HttpEntity entity = response.getEntity();
 
@@ -389,6 +400,10 @@ public class ListStations extends ListActivity {
 		return sortOrder;
 	}
 	
+	private String getUserAgent() {
+		return getString(R.string.user_agent_app_name) + "/" + versionName + " " + getString(R.string.user_agent_info);
+	}
+
 //	private void setFullScreen(boolean full) {
 //		if (full) {
 //			WindowManager.LayoutParams attrs = this.getWindow().getAttributes();

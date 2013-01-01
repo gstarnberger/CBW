@@ -3,6 +3,8 @@
 	<string name="json_url">http://dynamisch.citybikewien.at/citybike_xml.php</string>
 	<string name="map_uri">geo:0,0?q=$lat,$long&amp;z=20</string>
 	<string name="app_name">Citybike Stations Vienna</string>
+	<string name="user_agent_app_name">Citybike-Stationen-Wien</string>
+	<string name="user_agent_info">(+http://goo.gl/1xjUs)</string>
 	<string name="main_no_items">No data available. Use Menu / Reload to retry fetching data.</string>
 	<string name="resync">Reload</string>
 	<string name="about_label">About</string>
